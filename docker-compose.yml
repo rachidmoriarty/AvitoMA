@@ -25,6 +25,7 @@ services:
       - 80:80
       - 443:443    
       - 9993:9993
+      - 5432:5432
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot

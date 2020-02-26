@@ -14,6 +14,21 @@ stream {
         # Server that proxies connections to the upstream group
         proxy_pass gccappop;
     } 
+    upstream postgres {
+      {{ range gets "/postgresql/*" }}
+      {{ $keyval := split (.Key) ":" }}
+      {{ $url :=  (.Value) }}
+      {{ $app :=  (index $keyval 1) }}
+      server {{ $url }};
+      {{ end }}
+    }
+
+    server {
+        listen 5432;
+        # Server that proxies connections to the upstream group
+        proxy_pass postgres;
+    }
+
 
 
 }
@@ -64,7 +79,8 @@ upstream goappop {
 server {
     listen 80;
     server_name www.gramyup.com;
-
+    deny 81.192.111.243;
+    
     access_log /var/log/nginx/access.log upstreamlog;
 
     location / {
